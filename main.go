@@ -18,12 +18,31 @@ func main() {
 	ip := os.Getenv("IP")
 	port := os.Getenv("PORT")
 
-	client := &http.Client{Timeout: time.Second * 5}
-
-	resp, err := client.Get(fmt.Sprintf("http://%s:%s", ip, port))
+	url := fmt.Sprintf("http://%s:%s/elgato/accessory-info", ip, port)
+	resp, err := GetLightInfo(url)
 	if err != nil {
 		fmt.Println(err)
+		return
+	}
+	fmt.Println(resp)
+}
+
+func GetLightInfo(url string) (string, error) {
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return "", err
+	}
+	client := &http.Client{Timeout: 5 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
 	}
 	defer resp.Body.Close()
-	fmt.Println(resp.Status)
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("status code error: %d %s", resp.StatusCode, resp.Status)
+	}
+
+	// TODO: parse response body
+
+	return resp.Status, nil
 }
