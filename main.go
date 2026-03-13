@@ -1,10 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/joho/godotenv"
 )
@@ -27,13 +27,18 @@ func main() {
 	fmt.Println(resp)
 }
 
+// Device metadata about an Elgato Key Light device. Credit to github.com/mdlayher/keylight
+type Device struct {
+	ProductName         string `json:"productName,omitempty"`
+	HardwareBoardType   int    `json:"hardwareBoardType,omitempty"`
+	FirmwareBuildNumber int    `json:"firmwareBuildNumber,omitempty"`
+	FirmwareVersion     string `json:"firmwareVersion,omitempty"`
+	SerialNumber        string `json:"serialNumber,omitempty"`
+	DisplayName         string `json:"displayName,omitempty"`
+}
+
 func GetLightInfo(url string) (string, error) {
-	req, err := http.NewRequest(http.MethodGet, url, nil)
-	if err != nil {
-		return "", err
-	}
-	client := &http.Client{Timeout: 5 * time.Second}
-	resp, err := client.Do(req)
+	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
 	}
@@ -42,7 +47,10 @@ func GetLightInfo(url string) (string, error) {
 		return "", fmt.Errorf("status code error: %d %s", resp.StatusCode, resp.Status)
 	}
 
-	// TODO: parse response body
+	var device Device
+	if err := json.NewDecoder(resp.Body).Decode(&device); err != nil {
+		return "", fmt.Errorf("failed to decode response body: %v", err)
+	}
 
-	return resp.Status, nil
+	return device.SerialNumber, nil
 }
