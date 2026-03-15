@@ -6,32 +6,32 @@ import (
 	"net/http"
 )
 
-// lightsJSON contains the array of single LED lights in a device
-type lightsJSON struct {
-	Lights []lightJSON `json:"lightsJSON"`
+// lights contains the array of LED light objects in a device (could has multiple zones)
+type lights struct {
+	Lights []light `json:"lightsJSON"`
 }
 
-// lightJSON contains the information of a single LED light
-type lightJSON struct {
+// light contains the information of a LED light object
+type light struct {
 	On          int `json:"on"`
 	Brightness  int `json:"brightness"`
 	Temperature int `json:"temperature"`
 }
 
-func GetLightInfo(url string) (string, error) {
+func GetLightInfo(url string) (lights, error) {
 	resp, err := http.Get(url)
 	if err != nil {
-		return "", err
+		return lights{}, err
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("status code error: %d %s", resp.StatusCode, resp.Status)
+		return lights{}, fmt.Errorf("status code error: %d %s", resp.StatusCode, resp.Status)
 	}
 
-	var lights lightsJSON
-	if err := json.NewDecoder(resp.Body).Decode(&lights); err != nil {
-		return "", fmt.Errorf("failed to decode response body: %v", err)
+	var lightsArray lights
+	if err := json.NewDecoder(resp.Body).Decode(&lightsArray); err != nil {
+		return lights{}, fmt.Errorf("failed to decode response body: %v", err)
 	}
 
-	return fmt.Sprintf("%v", lights.Lights[0].Brightness), nil
+	return lightsArray, nil
 }
