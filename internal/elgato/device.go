@@ -16,7 +16,7 @@ type Device struct {
 	DisplayName         string `json:"displayName,omitempty"`
 }
 
-// GetDeviceInfo makes an http request to the provided URL and return a Device object with it's information
+// GetDeviceInfo makes an http get request to the provided URL and return a Device object with it's information
 func GetDeviceInfo(url string) (Device, error) {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -33,4 +33,10 @@ func GetDeviceInfo(url string) (Device, error) {
 	}
 
 	return device, nil
+}
+
+// PutDeviceInfo makes an http put request to the provided URL
+func PutDeviceInfo(url string) error {
+	// TODO: implement logic to push new infomation to an elgato device, ex: DisplayName
+	return nil
 }
