@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
-	"github.com/joho/godotenv"
+	tea "github.com/charmbracelet/bubbletea"
+	_ "github.com/joho/godotenv"
+	"github.com/nightails/fireflight/internal/app"
 )
 
 const (
@@ -13,9 +16,10 @@ const (
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		fmt.Println("Error loading .env file")
-	}
+	// Disable loading env for now
+	//if err := godotenv.Load(); err != nil {
+	//	fmt.Println("Error loading .env file")
+	//}
 
 	// test IP from .env
 	ip := os.Getenv("IP")
@@ -23,4 +27,10 @@ func main() {
 
 	// url example
 	_ = fmt.Sprintf("http://%s:%s%s", ip, port, lightsURL)
+
+	m := app.NewModel()
+	p := tea.NewProgram(m)
+	if _, err := p.Run(); err != nil {
+		log.Panicf("Program exited with error: %v", err)
+	}
 }
