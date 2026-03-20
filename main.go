@@ -11,6 +11,7 @@ import (
 )
 
 const (
+	port      = ":9123"
 	infoURL   = "/elgato/accessory-info"
 	lightsURL = "/elgato/lights"
 )
@@ -23,12 +24,11 @@ func main() {
 
 	// test IP from .env
 	ip := os.Getenv("IP")
-	port := os.Getenv("PORT")
 
 	// url example
-	_ = fmt.Sprintf("http://%s:%s%s", ip, port, lightsURL)
+	url := fmt.Sprintf("http://%s%s%s", ip, port, lightsURL)
 
-	m := app.NewModel()
+	m := app.NewModel(url)
 	p := tea.NewProgram(m)
 	if _, err := p.Run(); err != nil {
 		log.Panicf("Program exited with error: %v", err)

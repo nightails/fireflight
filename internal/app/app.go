@@ -2,10 +2,14 @@ package app
 
 import tea "github.com/charmbracelet/bubbletea"
 
-type Model struct{}
+type Model struct {
+	URL string
+}
 
-func NewModel() Model {
-	return Model{}
+func NewModel(url string) Model {
+	return Model{
+		URL: url,
+	}
 }
 
 func (m Model) Init() tea.Cmd {
