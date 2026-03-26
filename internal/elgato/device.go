@@ -16,7 +16,7 @@ type Device struct {
 	DisplayName         string `json:"displayName,omitempty"`
 }
 
-// GetDeviceInfo makes an http get request to the provided URL and return a Device object with it's information
+// GetDeviceInfo makes an http get request to the provided URL and returns a Device object with its information
 func GetDeviceInfo(url string) (Device, error) {
 	resp, err := http.Get(url)
 	if err != nil {
