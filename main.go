@@ -6,6 +6,7 @@ import (
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv"
 	"github.com/nightails/fireflight/internal/app"
 )
@@ -18,15 +19,15 @@ const (
 
 func main() {
 	// Disable loading env for now
-	//if err := godotenv.Load(); err != nil {
-	//	fmt.Println("Error loading .env file")
-	//}
+	if err := godotenv.Load(); err != nil {
+		fmt.Println("Error loading .env file")
+	}
 
 	// test IP from .env
 	ip := os.Getenv("IP")
 
 	// url example
-	url := fmt.Sprintf("http://%s%s%s", ip, port, lightsURL)
+	url := fmt.Sprintf("http://%s%s%s", ip, port, infoURL)
 
 	m := app.NewModel(url)
 	p := tea.NewProgram(m)
