@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-// Lights contains the array of LED light objects in a device (could has multiple zones)
+// Lights contain the array of LED light objects in a device (could has multiple zones)
 type Lights struct {
 	Lights []Light `json:"lightsJSON"`
 }
