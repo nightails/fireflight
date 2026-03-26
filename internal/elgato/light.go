@@ -18,7 +18,7 @@ type Light struct {
 	Temperature int `json:"temperature"`
 }
 
-// GetLightsInfo makes an http request to the provided URL and return Lights object with information of multiple lights
+// GetLightsInfo makes an http request to the provided URL and returns a Lights object with information of multiple lights
 func GetLightsInfo(url string) (Lights, error) {
 	resp, err := http.Get(url)
 	if err != nil {
